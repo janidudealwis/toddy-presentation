@@ -1,0 +1,322 @@
+@import 'tailwindcss';
+
+/* SINHA Samadi 2012 — a legacy pre-Unicode Sinhala face, carried over from the Toddycs
+   voting site so the two read as one product. It holds no glyphs in the Unicode Sinhala
+   block (U+0D80–U+0DFF); instead it draws Sinhala shapes on the Latin codepoints, so
+   category titles and candidate names must be typed with a legacy Sinhala keyboard —
+   the same way they are already typed in the voting admin. Latin text entered normally
+   will render as Sinhala nonsense. */
+@font-face {
+  font-family: 'SINHA Samadi 2012';
+  src: url('/fonts/sinha-samadi-2012.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  /* `block`, not `swap`. On a projector a flash of Lilita One at 150px before the real
+     face lands is a visible wrong-font frame in front of an audience; a brief blank is
+     the better failure. The file is local and preloaded, so the block is imperceptible. */
+  font-display: block;
+  /* U+0026 is held back. The face draws a ")" on the ampersand key and carries no "&"
+     anywhere in its ASCII range, so excluding that one codepoint is what lets it fall
+     through to Inter behind it — a stack only falls through on a glyph the font does
+     not have. Names like "කන්ඩා & නිතුවා" depend on this. */
+  unicode-range: U+0-25, U+27-10FFFF;
+}
+
+/* ── Toddycs ─────────────────────────────────────────────────────────────────
+   Tropical cricket night: dark jungle ground, carved wooden signboards lit by string
+   lights, gold lettering outlined in dark wood. Ported from the voting site's own
+   index.css — the palette, the wood gradient, the plank shadows and the ring treatment
+   are the design's own values, not approximations of a screenshot. */
+@theme {
+  --color-night: #1e0c04;
+  --color-night-deep: #140802;
+  --color-bark: #3d1c07;
+  --color-bark-soft: #4a220a;
+  --color-bark-line: #6b3512;
+
+  --color-gold: #ffd76a;
+  --color-gold-bright: #ffd23f;
+  --color-cream: #fff4dc;
+  --color-cream-dim: #f5dfb8;
+  --color-cream-mute: #d9bf94;
+  --color-carve: #3a1705;
+  /* The small-caps label on a plank. Spelled out because it is the one gold-surface
+     ink the voting site used inline rather than as a token. */
+  --color-ink-soft: #6b3310;
+
+  --color-leaf: #5cb836;
+  --color-leaf-deep: #3f9a2c;
+  --color-leaf-light: #82d24a;
+  --color-leaf-line: #173a0a;
+  --color-go: #2f8a24;
+  --color-live: #ff4b3e;
+  --color-confetti-red: #ff5a46;
+
+  --font-display: 'Lilita One', 'Arial Rounded MT Bold', system-ui, sans-serif;
+  --font-sans: 'Nunito', system-ui, -apple-system, sans-serif;
+  /* Inter sits between the two on purpose: it only has to answer for "&", which the
+     Sinhala face deliberately does not carry. Everything else passes through to the
+     faces either side of it. */
+  --font-sinhala: 'SINHA Samadi 2012', 'Inter', var(--font-display);
+
+  --radius-card: 22px;
+  --radius-plank: 14px;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    /* The letterbox bars around the 16:9 stage. Same value as the scene's own ground,
+       so a window that does not match 16:9 reads as vignette rather than as bars. */
+    background-color: var(--color-night);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    /* The presenter is a fixed stage; nothing should rubber-band or scroll behind it. */
+    overscroll-behavior: none;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-gold-bright);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  /* Sawn timber: fine grain lines over a warm gradient. */
+  .wood {
+    background:
+      repeating-linear-gradient(177deg,
+        rgba(110, 55, 10, 0) 0px, rgba(110, 55, 10, 0) 9px,
+        rgba(110, 55, 10, 0.13) 9px, rgba(110, 55, 10, 0.13) 11px),
+      linear-gradient(180deg, #f9d177 0%, #eba83c 55%, #cf7f22 100%);
+  }
+  .wood-bright {
+    background:
+      repeating-linear-gradient(177deg,
+        rgba(110, 55, 10, 0) 0px, rgba(110, 55, 10, 0) 9px,
+        rgba(110, 55, 10, 0.13) 9px, rgba(110, 55, 10, 0.13) 11px),
+      linear-gradient(180deg, #ffe07a 0%, #f2b23f 55%, #d9861f 100%);
+  }
+  .rope {
+    background: repeating-linear-gradient(160deg,
+      #d9b67a 0px, #d9b67a 3px, #8a5a2a 3px, #8a5a2a 6px);
+  }
+
+  /* A board sitting proud of the background, with its lit top edge. */
+  .board {
+    border: 3px solid var(--color-bark);
+    box-shadow:
+      inset 0 3px 0 rgba(255, 244, 200, 0.6),
+      inset 0 -5px 0 rgba(110, 50, 5, 0.35),
+      0 7px 0 #2a1204,
+      0 20px 36px rgba(0, 0, 0, 0.6);
+  }
+  .board-sm {
+    border: 3px solid var(--color-bark);
+    box-shadow:
+      inset 0 3px 0 rgba(255, 244, 200, 0.6),
+      inset 0 -4px 0 rgba(110, 50, 5, 0.35),
+      0 6px 0 var(--color-night),
+      0 14px 24px rgba(0, 0, 0, 0.55);
+  }
+  /* The big hanging sign on the title slide. Same construction as .board, with the
+     drop and the spread scaled up for a 1920 stage — a 7px lift under a 1300px plank
+     reads as flat. */
+  .board-lg {
+    border: 5px solid var(--color-bark);
+    box-shadow:
+      inset 0 5px 0 rgba(255, 244, 200, 0.6),
+      inset 0 -8px 0 rgba(110, 50, 5, 0.35),
+      0 14px 0 #2a1204,
+      0 38px 64px rgba(0, 0, 0, 0.65);
+  }
+  /* The small name plank under a candidate. */
+  .plank {
+    border: 3px solid var(--color-night);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 244, 200, 0.55),
+      0 4px 0 var(--color-night);
+  }
+
+  .ring-idle {
+    box-shadow:
+      0 0 0 3px var(--color-night),
+      inset 0 3px 0 rgba(255, 200, 140, 0.45),
+      0 10px 18px rgba(0, 0, 0, 0.55);
+  }
+  .ring-picked {
+    box-shadow:
+      0 0 0 3px var(--color-night),
+      0 0 0 8px var(--color-gold-bright),
+      0 0 0 11px var(--color-night),
+      0 0 34px 10px rgba(255, 190, 60, 0.65),
+      inset 0 3px 0 rgba(255, 200, 140, 0.45);
+  }
+
+  /* Gold lettering carved out of dark wood. */
+  .carved {
+    color: var(--color-gold);
+    -webkit-text-stroke: 8px var(--color-bark);
+    paint-order: stroke fill;
+    text-shadow: 0 5px 0 var(--color-night), 0 0 24px rgba(255, 170, 50, 0.5);
+  }
+  .carved-sm {
+    color: var(--color-gold);
+    -webkit-text-stroke: 7px var(--color-bark);
+    paint-order: stroke fill;
+    text-shadow: 0 4px 0 var(--color-night), 0 0 20px rgba(255, 170, 50, 0.45);
+  }
+  .engraved {
+    color: var(--color-carve);
+    text-shadow: 0 2px 0 rgba(255, 236, 180, 0.7);
+  }
+
+  /* The Sinhala face on its own, no lettering treatment. Admin reads and edits these
+     strings as plain text rather than as signage, so it wants the typeface and nothing
+     else — titles, names, and the fields they are typed into. */
+  .sinhala {
+    font-family: var(--font-sinhala);
+  }
+  /* Placeholders stay in the UI font. They are English prompts, and the Sinhala face
+     would draw them as nonsense — the one place that hint has to stay readable. */
+  .sinhala::placeholder {
+    font-family: var(--font-sans);
+  }
+
+  /* Category topics: white lettering outlined in near-black, dropped onto the board by a
+     hard edge with a soft one spreading beneath it. Every value is in em so the one class
+     holds its proportions at any type size — which matters more here than it did on the
+     phone, because the title slide auto-fits this from 150px down to 64px.
+
+     The shadow is deliberately warm rather than pure black. Against the board's amber this
+     is the difference between depth and a stamped-on slab. */
+  .topic {
+    font-family: var(--font-sinhala);
+    color: #fff;
+    line-height: 1.18;
+    /* Body sets 700 site-wide. Inter is only loaded at 600 (semibold), so this pins the
+       requested weight to the one static instance actually downloaded — otherwise the
+       browser hunts for a 700 that was never fetched and can synthesize a fake bold on
+       top of it. */
+    font-weight: 600;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke: 0.15em var(--color-night);
+    paint-order: stroke fill;
+    text-shadow:
+      0 0.11em 0 #2a1204,
+      0 0.18em 0.16em rgba(30, 12, 4, 0.32);
+  }
+
+  /* Pressing a board drives it down onto its own drop shadow. */
+  .press {
+    transition: transform 120ms ease, box-shadow 120ms ease, opacity 160ms ease,
+      filter 160ms ease;
+  }
+  .press:active {
+    transform: translateY(4px);
+  }
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────────────
+   Slide entrances, the winner reveal, the ray rotation and the confetti burst. Each
+   keyframe set is paired with a reduced-motion answer at the bottom of the file. */
+
+/* The sign swings down onto its ropes. No rotation here — the tilt lives on a wrapper, so
+   these keyframes compose with any angle the caller asks for. */
+@keyframes plank-drop {
+  from { opacity: 0; transform: translateY(-80px) scale(0.96); }
+  60%  { transform: translateY(10px) scale(1.01); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes card-pop {
+  from { opacity: 0; transform: scale(0.6); }
+  70%  { opacity: 1; transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slide-enter {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rays-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* The winner arriving: a hard flash over the medallion, then the pop settling out. */
+@keyframes medallion-pop {
+  from { transform: scale(0.82); }
+  55%  { transform: scale(1.07); }
+  to   { transform: scale(1); }
+}
+
+@keyframes flash-out {
+  from { opacity: 0.95; }
+  to   { opacity: 0; }
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.45; transform: translateY(0); }
+  50%      { opacity: 1; transform: translateY(-3px); }
+}
+
+/* Confetti. Each element carries its own --dx/--dy/--rot/--delay, so one keyframe set
+   drives the whole burst with no runtime library and no per-frame JavaScript. The
+   second half of the travel adds gravity, which is what stops it reading as a starburst. */
+@keyframes confetti-fly {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.4);
+  }
+  12% { opacity: 1; }
+  60% {
+    transform: translate3d(calc(var(--dx) * 0.8), calc(var(--dy) * 0.8), 0)
+      rotate(calc(var(--rot) * 0.7)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--dx), calc(var(--dy) + var(--fall)), 0)
+      rotate(var(--rot)) scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press, .press:active { transition: none; transform: none; }
+
+  /* Everything still arrives, it just arrives by fading. The confetti burst and the ray
+     rotation are the two that have to be cancelled outright rather than shortened —
+     a 0.01ms burst would strobe. */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .confetti-piece { display: none !important; }
+  .rays { animation: none !important; }
+  .slide-in { animation: fade-in 200ms ease both !important; }
+}

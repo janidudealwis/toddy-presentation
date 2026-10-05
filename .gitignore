@@ -1,0 +1,12 @@
+node_modules
+dist
+.vercel
+*.local
+.DS_Store
+
+# TypeScript incremental build state
+*.tsbuildinfo
+
+# Source art — already converted to public/brand/*.webp, not used by the app
+Cozy Tropical Jungle Clearing.png
+TD26.png

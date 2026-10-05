@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1e0c04" />
+    <meta name="description" content="Toddycs — category winners, on the big screen." />
+    <title>Toddycs Presentation</title>
+    <link rel="icon" href="/brand/td26.webp" />
+    <!-- Every face is bundled (see src/fonts.ts). Nothing is fetched from a CDN at
+         runtime, because this runs at a venue with no network. The Sinhala face is the
+         one that is not an npm package, so it gets preloaded by hand — it is on the
+         critical path for the very first slide. -->
+    <link
+      rel="preload"
+      href="/fonts/sinha-samadi-2012.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
